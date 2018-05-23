@@ -2,6 +2,8 @@ package org.study.server;
 
 import org.study.server.entity.Request;
 import org.study.server.exception.IncorrectMethodException;
+import org.study.server.exception.InternalServerErrorException;
+import org.study.server.exception.ResourceNotFoundException;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -24,9 +26,13 @@ public class RequestHandler {
             RequestParser requestParser = new RequestParser();
             Request request = requestParser.parseRequest(reader);
             InputStream resourceIS = resourceReader.readContent(request.getUri());
-            responceWriter.writeSuccessResponce(resourceIS, writer);
+            responceWriter.writeSuccessResponse(resourceIS, writer);
         } catch(IncorrectMethodException e){
-
+            responceWriter.writeIncorrectMethodResponse(writer);
+        } catch (InternalServerErrorException e ){
+            responceWriter.writeInternaServerErrorResponse(writer);
+        } catch (ResourceNotFoundException e){
+            responceWriter.writeResourceNotFoundResponse(writer);
         }
 
 

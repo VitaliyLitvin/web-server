@@ -1,7 +1,5 @@
 package org.study.server;
 
-import com.sun.tools.internal.ws.processor.model.Request;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,7 +14,7 @@ public class Server {
     public void start() {
 
 
-        try(ServerSocket serverSocket = new ServerSocket()){
+        try(ServerSocket serverSocket = new ServerSocket(port)){
             while(true){
                 Socket socket = serverSocket.accept();
                 RequestHandler requestHandler = new RequestHandler(
@@ -37,7 +35,7 @@ public class Server {
         this.port = port;
     }
 
-    private void setWebAppPath(String webAppPath) {
+    public void setWebAppPath(String webAppPath) {
         resourceReader = new ResourceReader(webAppPath);
     }
 }

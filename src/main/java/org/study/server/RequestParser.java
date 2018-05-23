@@ -2,7 +2,7 @@ package org.study.server;
 
 import org.study.server.entity.HttpMethod;
 import org.study.server.entity.Request;
-import org.study.server.exception.InternaServerErrorException;
+import org.study.server.exception.InternalServerErrorException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class RequestParser {
             injectUriAndMethod(request, reader.readLine());
             injectHeaders(request, reader);
         } catch (IOException e ){
-            throw new InternaServerErrorException("Exception during the reading  request", e);
+            throw new InternalServerErrorException("Exception during the reading  request", e);
         }
         return request;
     }
@@ -30,7 +30,7 @@ public class RequestParser {
 
     private void injectHeaders(Request request, BufferedReader reader) throws IOException {
         String header;
-        while ((header = reader.readLine()) != null) {
+        while ((header = reader.readLine()).isEmpty()) {
             String[] headerParts = header.split(":", 2);
             request.getHeaders().put(headerParts[0], headerParts[1]);
         }
