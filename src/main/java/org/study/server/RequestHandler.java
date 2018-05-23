@@ -4,10 +4,8 @@ import org.study.server.entity.Request;
 import org.study.server.exception.IncorrectMethodException;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashSet;
 
 public class RequestHandler {
     private BufferedReader reader;
