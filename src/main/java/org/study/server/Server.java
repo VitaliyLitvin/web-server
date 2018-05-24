@@ -1,5 +1,8 @@
 package org.study.server;
 
+import org.study.server.utils.ResourceReader;
+
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,25 +13,24 @@ public class Server {
     private int port;
     private ResourceReader resourceReader;
 
-
     public void start() {
 
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
 
-        try(ServerSocket serverSocket = new ServerSocket(port)){
-            while(true){
-                Socket socket = serverSocket.accept();
-                RequestHandler requestHandler = new RequestHandler(
-                        new BufferedReader(new InputStreamReader(socket.getInputStream())),
-                        socket.getOutputStream(),
-                        resourceReader
-                );
-                requestHandler.handle();
+            while (true) {
+                try (Socket socket = serverSocket.accept();
+                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                     BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream())) {
+                    RequestHandler requestHandler = new RequestHandler(bufferedReader, bufferedOutputStream, resourceReader);
+                    requestHandler.handle();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public void setPort(int port) {

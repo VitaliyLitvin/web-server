@@ -1,8 +1,9 @@
-package org.study.server;
+package org.study.server.utils;
 
 import org.study.server.entity.HttpMethod;
+import org.study.server.entity.HttpResponseStatus;
 import org.study.server.entity.Request;
-import org.study.server.exception.InternalServerErrorException;
+import org.study.server.exception.ServerException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,14 +11,14 @@ import java.util.HashMap;
 
 public class RequestParser {
 
-    Request parseRequest(BufferedReader reader) {
+    public Request parseRequest(BufferedReader reader) {
         Request request = new Request();
         request.setHeaders(new HashMap<String, String>());
         try {
             injectUriAndMethod(request, reader.readLine());
             injectHeaders(request, reader);
-        } catch (IOException e ){
-            throw new InternalServerErrorException("Exception during the reading  request", e);
+        } catch (IOException e) {
+            throw new ServerException(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Exception during the reading  request", e);
         }
         return request;
     }
