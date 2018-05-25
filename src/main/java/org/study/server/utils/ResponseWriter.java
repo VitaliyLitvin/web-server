@@ -7,16 +7,17 @@ import java.io.*;
 
 public class ResponseWriter {
 
-    public void writeSuccessResponse(InputStream resourceIS, OutputStream writer) {
+    public void writeSuccessResponse(InputStream resourceReader, OutputStream writer) {
         String responseLine = "HTTP/1.1 " + HttpResponseStatus.OK.getCode() + " " + HttpResponseStatus.OK.getMessage() + " \r\n\r\n";
         byte[] buffer = new byte[8 * 1024];
         int i;
-        try (InputStream is = resourceIS) {
+        try  {
             writer.write(responseLine.getBytes());
-            while ((i = is.read(buffer)) != -1) {
+            while ((i = resourceReader.read(buffer)) != -1) {
                 writer.write(buffer, 0, i);
             }
             writer.close();
+            resourceReader.close();
         } catch (IOException e) {
             throw new ServerException(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", e);
         }
